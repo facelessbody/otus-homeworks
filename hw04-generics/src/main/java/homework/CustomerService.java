@@ -1,23 +1,48 @@
 package homework;
 
 
+import java.util.Comparator;
 import java.util.Map;
+import java.util.Optional;
+import java.util.TreeMap;
 
 public class CustomerService {
 
-    //todo: 3. надо реализовать методы этого класса
-    //важно подобрать подходящую Map-у, посмотрите на редко используемые методы, они тут полезны
+    private final TreeMap<Customer, String> storage = new TreeMap<>(Comparator.comparing(Customer::getScores));
 
     public Map.Entry<Customer, String> getSmallest() {
-        //Возможно, чтобы реализовать этот метод, потребуется посмотреть как Map.Entry сделан в jdk
-        return null; // это "заглушка, чтобы скомилировать"
+        return ImmutableKeyMapEntry.ofNullable(storage.firstEntry());
     }
 
     public Map.Entry<Customer, String> getNext(Customer customer) {
-        return null; // это "заглушка, чтобы скомилировать"
+        return ImmutableKeyMapEntry.ofNullable(storage.higherEntry(customer));
     }
 
     public void add(Customer customer, String data) {
+        storage.put(customer, data);
+    }
 
+    private record ImmutableKeyMapEntry(
+            Map.Entry<Customer, String> delegate
+    ) implements Map.Entry<Customer, String> {
+
+        @Override
+        public Customer getKey() {
+            return new Customer(delegate.getKey());
+        }
+
+        @Override
+        public String getValue() {
+            return delegate.getValue();
+        }
+
+        @Override
+        public String setValue(String value) {
+            return delegate.setValue(value);
+        }
+
+        public static ImmutableKeyMapEntry ofNullable(Map.Entry<Customer, String> entry) {
+            return Optional.ofNullable(entry).map(ImmutableKeyMapEntry::new).orElse(null);
+        }
     }
 }

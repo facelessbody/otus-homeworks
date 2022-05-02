@@ -36,3 +36,6 @@ out
 *.iws
 *.ipr
 *.idea
+
+# Ignore files created by the Finder application
+.DS_Store

@@ -64,20 +64,20 @@ public class TestRunner {
         return new Results(total, passed, failed);
     }
 
-    private static void runTest(Object $this, Collection<Method> beforeMethods, Collection<Method> afterMethods,
+    private static void runTest(Object instance, Collection<Method> beforeMethods, Collection<Method> afterMethods,
                                 Method test) {
         var exceptions = new ArrayList<Throwable>();
         try {
             for (Method m : beforeMethods) {
-                invoke($this, m);
+                invoke(instance, m);
             }
-            invoke($this, test);
+            invoke(instance, test);
         } catch (Throwable e) {
             exceptions.add(e);
         } finally {
             for (Method m : afterMethods) {
                 try {
-                    invoke($this, m);
+                    invoke(instance, m);
                 } catch (Throwable e) {
                     exceptions.add(e);
                 }
@@ -91,10 +91,10 @@ public class TestRunner {
         }
     }
 
-    public static void invoke(Object $this, Method m) throws Throwable {
+    public static void invoke(Object instance, Method m) throws Throwable {
         try {
             m.setAccessible(true);
-            m.invoke($this);
+            m.invoke(instance);
         } catch (InvocationTargetException e) {
             throw e.getCause();
         }

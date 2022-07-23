@@ -1,0 +1,13 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+dependencies {
+    implementation 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+}
+
+application {
+    mainClass = 'ru.otus.Main'
+}
